@@ -1,0 +1,2 @@
+npm init -y
+npm i express dotenv cors cookie-parser bcrypt helmet jsonwebtoken winston

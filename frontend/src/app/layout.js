@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "MGH Chat App",
-  description: "MGH Chat App",
+  title: "MGUMST Chat App",
+  description: "MGUMST Chat App",
 };
 
 export default function RootLayout({ children }) {

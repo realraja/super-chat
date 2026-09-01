@@ -1,6 +1,5 @@
 // models/User.js
 
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 
@@ -12,13 +11,14 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true, select: false },
     phone: { type: String},
     avatar: { type: String },
-    background: { type: String },
+    department: { type: String },
+    post: { type: String },
 
-    verified: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      enum: ["active", "inactive", "suspended"],
+      default: "inactive",
     },
-    dummy_data: [],
     lastSeen: {
       type: Date,
       default: Date.now,
@@ -27,12 +27,6 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    createdDate: [],
-    
-    email_otp: Number,
-    phone_otp: Number,
-    email_otp_expiry: Date,
-    phone_otp_expiry: Date,
   },
   {
     timestamps: true,

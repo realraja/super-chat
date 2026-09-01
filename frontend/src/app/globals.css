@@ -2,3 +2,9 @@
 
 /* Define the .dark class variant using the non-deprecated directive */
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-blue-main: #3F6FD9;
+  --color-blue-blur: #728EC4;
+  --color-blue-hover: #305EE6;
+}

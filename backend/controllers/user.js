@@ -5,17 +5,9 @@ import { Chat } from "../models/chat.js";
 import { NotFoundError, UnauthorizedError, ValidationError } from "../utils/error.js";
 import { sendToken } from "../utils/setCookies.js";
 
-let dateArray = [
-  new Date().getDate(),
-  new Date().getMonth() + 1,
-  new Date().getFullYear(),
-  new Date().getHours(),
-  new Date().getMinutes(),
-  new Date().getSeconds(),
-];
 
 export const Register = tryCatch(async (req, res, next) => {
-  const { name, username, password } = req.body;
+  const { name, username, password, department, post , phone, email } = req.body;
   const file = req.file;
   // console.log('ye data =====>',name,username,password,file);
 
@@ -34,7 +26,10 @@ export const Register = tryCatch(async (req, res, next) => {
     username,
     password,
     avatar,
-    createdDate: dateArray,
+    department,
+    post,
+    phone,
+    email
   });
   // res.json({success: true,message: 'post api success'});
   sendToken(res, user, 201, `user ${user.name} created successfully`);
@@ -54,6 +49,10 @@ export const Login = tryCatch(async (req, res, next) => {
 
   if (!isMatch) {
     return next(new UnauthorizedError("invalid username and password"));
+  }
+
+  if (user.status !== "active") {
+    return next(new UnauthorizedError("Your account is not active. Please contact the administrator."));
   }
 
   sendToken(res, user, 200, "logged in successfully!");
@@ -95,7 +94,13 @@ export const Search = tryCatch(async(req,res,next)=>{
   // const user = await User.findById(userId,"name");
   const chat = await Chat.find({groupChat:true,name:{$regex:name,$options:'i'}}).populate("creator","name avatar");
 
-  const findedUsers = await User.find({name:{$regex:name,$options:'i'}});
+  const findedUsers = await User.find({$or:[
+    {name:{$regex:name,$options:'i'}},
+    {username:{$regex:name,$options:'i'}},
+    {email:{$regex:name,$options:'i'}},
+    {department:{$regex:name,$options:'i'}},
+    {post:{$regex:name,$options:'i'}},
+  ]},"name username avatar updatedAt");
 
 
   const modifiedUsers = findedUsers.map(async({_id,name,username,avatar,updatedAt})=>{
@@ -120,9 +125,3 @@ export const Search = tryCatch(async(req,res,next)=>{
 });
 
 
-// const Chats = await Chat.findOne({
-//   $and:[
-//       {members: req.id},
-//       {sender:chatId,receiver:req.id},
-//   ]
-// })

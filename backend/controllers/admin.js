@@ -44,13 +44,13 @@ export const allUsers = tryCatch(async(req,res,next)=>{
     const users = await User.find();
 
     const data = await Promise.all(
-        users.map(async({_id,name,username,avatar,verified,createdDate,createdAt,phone,email})=>{
+        users.map(async({_id,name,username,avatar,createdDate,createdAt,phone,email,status,department,post})=>{
             const [groups,friends] = await Promise.all([
                 Chat.countDocuments({groupChat:true,members:_id}),
                 Chat.countDocuments({groupChat:false,members:_id}),
             ])
 
-            return {_id,name,username,avatar,verified,createdDate,createdAt,phone,email,friends,groups}
+            return {_id,name,username,avatar,createdDate,createdAt,phone,email,status,department,post,friends,groups}
         })
     )
 
